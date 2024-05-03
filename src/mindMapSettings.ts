@@ -1,12 +1,6 @@
 import { App, debounce, PluginSettingTab, Setting } from 'obsidian';
 import CanvasMindMap from '.';
 
-export type ModifierKey = 'Alt' | 'Mod' | 'Shift';
-
-export function supportModifierKey() {
-	return ['Alt', 'Mod', 'Shift'];
-}
-
 export interface MindMapSettings {
 	navigate: {
 		useNavigate: boolean;
