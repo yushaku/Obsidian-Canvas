@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CanvasData, CanvasNodeData } from 'obsidian/canvas';
+import { CanvasData, CanvasNodeData, NodeSide } from 'obsidian/canvas';
 
 export enum ModifierKey {
   Alt = 'Alt',
@@ -127,7 +127,6 @@ declare module 'obsidian' {
 
   interface CanvasNode {
     id: CanvasNodeID;
-
     x: number;
     y: number;
     width: number;
@@ -136,20 +135,22 @@ declare module 'obsidian' {
     bbox: CanvasCoords;
     unknownData: CanvasNodeUnknownData;
     renderedZIndex: number;
-
     headerComponent: Component;
-
     nodeEl: HTMLElement;
     labelEl: HTMLElement;
     contentEl: HTMLElement;
     containerEl: HTMLElement;
-
     canvas: Canvas;
     app: App;
+    isEditing: boolean;
+    label?: string;
+    url?: string;
 
     getBBox(containing?: boolean): CanvasCoords;
 
     moveTo({ x, y }: { x: number; y: number }): void;
+
+    startEditing(): void;
 
     render(): void;
   }
@@ -208,7 +209,7 @@ declare module 'obsidian' {
 
   interface EdgeT {
     fromOrTo: string;
-    side: string;
+    side: NodeSide;
     node: CanvasNode | CanvasNodeData;
   }
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { around } from 'monkey-around';
-import { ItemView, Plugin, TFile } from 'obsidian';
+import { CanvasNode, ItemView, Plugin, TFile } from 'obsidian';
 import {
   DEFAULT_SETTINGS,
   MindMapSettings,
@@ -253,7 +253,7 @@ export default class CanvasMindMap extends Plugin {
               const selection = this.canvas.selection;
               if (selection.size !== 1) return;
 
-              const node = selection.entries().next().value[1];
+              const node = selection.entries().next().value[1] as CanvasNode;
               if (node?.label || node?.url) return;
               if (node.isEditing) return;
 

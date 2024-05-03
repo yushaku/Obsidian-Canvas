@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Canvas,
   CanvasEdge,
@@ -23,13 +22,13 @@ export const random = (e: number) => {
   return t.join('');
 };
 
-export const createChildFileNode = (
+export function createChildFileNode(
   canvas: Canvas,
-  parentNode: any,
+  parentNode: CanvasNodeData,
   file: TFile,
   path: string,
   y: number,
-) => {
+) {
   const node = addNode(canvas, random(16), {
     x: parentNode.x + parentNode.width + 200,
     y: y,
@@ -55,13 +54,11 @@ export const createChildFileNode = (
       node: <CanvasNodeData>node,
     },
   );
-
   canvas.requestSave();
-
   return node;
-};
+}
 
-export const addNode = (
+export function addNode(
   canvas: Canvas,
   id: string,
   {
@@ -81,7 +78,7 @@ export const addNode = (
     content: string;
     subpath?: string;
   },
-) => {
+) {
   if (!canvas) return;
 
   const data = canvas.getData();
@@ -113,15 +110,15 @@ export const addNode = (
 
   canvas.requestFrame();
 
-  return node;
-};
+  return <CanvasNodeData>node;
+}
 
-export const addEdge = (
-  canvas: any,
+export function addEdge(
+  canvas: Canvas,
   edgeID: string,
   fromEdge: EdgeT,
   toEdge: EdgeT,
-) => {
+) {
   if (!canvas) return;
 
   const data = canvas.getData();
@@ -142,7 +139,7 @@ export const addEdge = (
   });
 
   canvas.requestFrame();
-};
+}
 
 export function buildTrees(
   canvasData: CanvasData,
@@ -217,7 +214,11 @@ function shouldAddChild(
   }
 }
 
-export const createEdge = async (node1: any, node2: any, canvas: Canvas) => {
+export async function createEdge(
+  canvas: Canvas,
+  node1: CanvasNodeData,
+  node2: CanvasNodeData,
+) {
   addEdge(
     canvas,
     random(16),
@@ -232,9 +233,9 @@ export const createEdge = async (node1: any, node2: any, canvas: Canvas) => {
       node: node2,
     },
   );
-};
+}
 
-export const navigate = (canvas: Canvas, direction: string) => {
+export function navigate(canvas: Canvas, direction: string) {
   console.log(canvas);
 
   const currentSelection = canvas.selection;
@@ -294,9 +295,9 @@ export const navigate = (canvas: Canvas, direction: string) => {
   }
 
   return nextNode;
-};
+}
 
-export const createFloatingNode = (canvas: any, direction: string) => {
+export function createFloatingNode(canvas: Canvas, direction: string) {
   const selection = canvas.selection;
 
   if (selection.size !== 1) return;
@@ -340,13 +341,13 @@ export const createFloatingNode = (canvas: any, direction: string) => {
   }, 100);
 
   return tempChildNode;
-};
+}
 
-export const childNode = async (
+export async function childNode(
   canvas: Canvas,
   parentNode: CanvasNode,
   y: number,
-) => {
+) {
   const tempChildNode = addNode(canvas, random(16), {
     x: parentNode.x + parentNode.width + 200,
     y: y,
@@ -355,20 +356,21 @@ export const childNode = async (
     type: 'text',
     content: '',
   });
-  await createEdge(parentNode, tempChildNode, canvas);
   if (!tempChildNode) return;
 
+  await createEdge(canvas, parentNode, tempChildNode);
   canvas.deselectAll();
+
   const node = canvas.nodes?.get(tempChildNode.id ?? '');
   if (!node) return;
-  canvas.selectOnly(node);
 
+  canvas.selectOnly(node);
   canvas.requestSave();
 
   return tempChildNode;
-};
+}
 
-export const createChildNode = async (canvas: Canvas, ignored: boolean) => {
+export async function createChildNode(canvas: Canvas, ignored: boolean) {
   if (canvas.selection.size !== 1) return;
   const parentNode = canvas.selection.entries().next().value[1];
 
@@ -390,13 +392,13 @@ export const createChildNode = async (canvas: Canvas, ignored: boolean) => {
   }
 
   return tempChildNode;
-};
+}
 
-const siblingNode = async (
+async function siblingNode(
   canvas: Canvas,
   parentNode: CanvasNode,
   prevParentEdges: CanvasEdgeData[],
-) => {
+) {
   const allEdges = canvas
     .getEdgesForNode(parentNode)
     .filter((item: CanvasEdge) => {
@@ -410,9 +412,9 @@ const siblingNode = async (
   const lastNode = allNodes[allNodes.length - 1];
   canvas.selectOnly(lastNode);
   return await createSiblingNode(canvas, false);
-};
+}
 
-export const createSiblingNode = async (canvas: Canvas, ignored: boolean) => {
+export async function createSiblingNode(canvas: Canvas, ignored: boolean) {
   if (canvas.selection.size !== 1) return;
   const selectedNode = canvas.selection.entries().next().value[1];
 
@@ -455,4 +457,4 @@ export const createSiblingNode = async (canvas: Canvas, ignored: boolean) => {
 
   canvas.requestSave();
   return newChildNode;
-};
+}
