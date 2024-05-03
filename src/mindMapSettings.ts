@@ -1,12 +1,10 @@
-import { App, debounce, Platform, PluginSettingTab, Setting } from "obsidian";
-import CanvasMindMap from "./canvasMindMap";
+import { App, debounce, PluginSettingTab, Setting } from 'obsidian';
+import CanvasMindMap from '.';
 
-type ModifierKey = 'Alt' | 'Mod' | 'Shift';
+export type ModifierKey = 'Alt' | 'Mod' | 'Shift';
 
-function supportModifierKey() {
-
+export function supportModifierKey() {
 	return ['Alt', 'Mod', 'Shift'];
-
 }
 
 export interface MindMapSettings {
@@ -31,7 +29,6 @@ export interface MindMapSettings {
 	};
 }
 
-
 export const DEFAULT_SETTINGS: MindMapSettings = {
 	navigate: {
 		useNavigate: true,
@@ -51,14 +48,13 @@ export const DEFAULT_SETTINGS: MindMapSettings = {
 	},
 	advanced: {
 		transferToCommands: false,
-	}
+	},
 };
 
 export class MindMapSettingTab extends PluginSettingTab {
 	plugin: CanvasMindMap;
 
 	updateSettings(key: any, value: any): void {
-
 		this.plugin.settings = {
 			...this.plugin.settings,
 			[key.split('.')[0]]: {
@@ -85,18 +81,20 @@ export class MindMapSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		const {containerEl} = this;
+		const { containerEl } = this;
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Canvas MindMap'});
+		containerEl.createEl('h2', { text: 'Canvas MindMap' });
 
 		this.useNavigateHotkeySetting(containerEl, this.plugin.settings);
 		this.createHotkeySetting(containerEl, this.plugin.settings);
 
 		new Setting(containerEl)
 			.setName('Donate')
-			.setDesc('If you like this plugin, consider donating to support continued development:')
+			.setDesc(
+				'If you like this plugin, consider donating to support continued development:',
+			)
 			.addButton((bt) => {
 				bt.buttonEl.outerHTML = `<a href="https://www.buymeacoffee.com/boninall"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=boninall&button_colour=6495ED&font_colour=ffffff&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00"></a>`;
 			});
@@ -130,10 +128,12 @@ export class MindMapSettingTab extends PluginSettingTab {
 		// 			});
 		// 		});
 		// }
-
 	}
 
-	private createHotkeySetting(containerEl: HTMLElement, setting: MindMapSettings) {
+	private createHotkeySetting(
+		containerEl: HTMLElement,
+		setting: MindMapSettings,
+	) {
 		new Setting(containerEl)
 			.setName('Create Float')
 			.setDesc('Create a float node')

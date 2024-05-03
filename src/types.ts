@@ -1,6 +1,5 @@
-import 'obsidian';
-import { MarkdownView, TFile } from 'obsidian';
-import { CanvasData } from 'obsidian/canvas';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { CanvasData, CanvasNodeData } from 'obsidian/canvas';
 
 export interface CanvasNodeUnknownData {
 	id: string;
@@ -76,8 +75,6 @@ declare module 'obsidian' {
 
 		selectOnly(nodes: CanvasNode): void;
 
-		requestSave(save?: boolean, triggerBySelf?: boolean): void;
-
 		zoomToSelection(): void;
 	}
 
@@ -146,7 +143,7 @@ declare module 'obsidian' {
 
 		getBBox(containing?: boolean): CanvasCoords;
 
-		moveTo({x, y}: { x: number, y: number }): void;
+		moveTo({ x, y }: { x: number; y: number }): void;
 
 		render(): void;
 	}
@@ -201,5 +198,16 @@ declare module 'obsidian' {
 		maxY: number;
 		minX: number;
 		minY: number;
+	}
+
+	interface EdgeT {
+		fromOrTo: string;
+		side: string;
+		node: CanvasNode | CanvasNodeData;
+	}
+
+	interface TreeNode {
+		id: string;
+		children: TreeNode[];
 	}
 }
